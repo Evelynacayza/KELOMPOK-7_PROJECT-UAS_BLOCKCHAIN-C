@@ -9,18 +9,18 @@
 ```
 TenderJalanJawa/
 │
-├── login.html          ← Halaman login & autentikasi
-├── admin.html          ← Halaman Pokja Pemilihan (admin)
-├── vendor.html         ← Halaman Portal Vendor
-├── publik.html         ← Halaman Papan Transparansi Publik
+├── smart-contract/
+│   └── TenderJalanJawa.sol    ← Kode Solidity utama
 │
-├── css/
-│   └── style.css       ← Stylesheet global (dipakai semua halaman)
-│
-├── js/
-│   ├── config.js       ← Contract address, ABI, akun demo
-│   ├── session.js      ← Manajemen state antar halaman (sessionStorage)
-│   └── blockchain.js   ← Koneksi MetaMask & fungsi Ethers.js
+├── frontend/
+│   ├── login.html             ← Halaman login & autentikasi
+│   ├── admin.html             ← Halaman Pokja Pemilihan (admin)
+│   ├── vendor.html            ← Halaman Portal Vendor
+│   ├── publik.html            ← Halaman Papan Transparansi Publik
+│   ├── style.css              ← Stylesheet global aplikasi
+│   ├── blockchain.js          ← Koneksi MetaMask & fungsi Ethers.js
+│   ├── config.js              ← Contract address, ABI, akun demo
+│   └── session.js             ← Manajemen state antar halaman (sessionStorage)
 │
 └── README.md
 ```
@@ -34,7 +34,7 @@ login.html
     │
     ├── admin123 / admin123  ──────────────→ admin.html
     │                                            │
-    ├── vendor01 / password01 ──→ vendor.html ←─┘ (admin bisa akses)
+    ├── vendor01 / Vendor01@2026 ──→ vendor.html ←─┘ (admin bisa akses)
     │
     └── Masuk sebagai Publik ──→ publik.html (semua role bisa akses)
 ```
@@ -53,17 +53,24 @@ tersedia di setiap halaman tanpa perlu kirim ulang.
 - ETH Sepolia gratis: [sepoliafaucet.com](https://sepoliafaucet.com)
 
 ### Langkah
-1. Buka project dengan **Live Server** di VS Code
-   (klik kanan `login.html` → *Open with Live Server*)
-   > ⚠️ Jangan buka dengan `file://` — MetaMask butuh `http://`
+1. Buka proyek menggunakan editor VS Code, masuk ke dalam folder frontend, lalu klik kanan pada berkas login.html $\rightarrow$ pilih Open with Live Server.
+
 
 2. Login sesuai role:
 
-| Role   | Username   | Password    |
-|--------|------------|-------------|
-| Admin  | `admin123` | `admin123`  |
-| Vendor | `vendor01` | `password01`|
-| Publik | —          | klik tombol |
+| Role | Username | Password | Keterangan Akun |
+| :--- | :---: | :---: | :--- |
+| **Admin** | `admin123` | `admin123` | Panitia / Pokja Pemilihan |
+| **Vendor** | `vendor01` | `Vendor01@2026` | Kontraktor Pengaju Tender (Vendor 01) |
+| **Vendor** | `vendor02` | `Vendor02@2026` | Kontraktor Pengaju Tender (Vendor 02) |
+| **Vendor** | `vendor03` | `Vendor03@2026` | Kontraktor Pengaju Tender (Vendor 03) |
+| **Vendor** | `vendor04` | `Vendor04@2026` | Kontraktor Pengaju Tender (Vendor 04) |
+| **Vendor** | `vendor05` | `Vendor05@2026` | Kontraktor Pengaju Tender (Vendor 05) |
+| **Publik** | — | klik tombol | Masyarakat Umum (Read-Only) |
+
+
+
+
 
 3. Hubungkan MetaMask di halaman yang memerlukan transaksi
 
@@ -88,16 +95,15 @@ const contractAddress = "0x...ADDRESS_BARU...";
 | **Etherscan** | https://sepolia.etherscan.io/address/0xE43... |
 | **Solidity** | `^0.8.19` |
 
-### Fungsi
+### Fungsi Utama Smart Contract
 
 | Fungsi | Akses | Keterangan |
-|--------|-------|------------|
-| `submitProposal()` | Vendor | Submit penawaran ke blockchain |
-| `closeBidding()` | Admin | Tutup gerbang lelang |
-| `announceWinner()` | Admin | Kontrak otomatis pilih skor tertinggi |
-| `getProposals()` | Semua | Baca semua penawaran |
-| `isBiddingOpen` | Semua | Status lelang |
-| `hasWinner` | Semua | Ada/tidaknya pemenang |
+| :--- | :---: | :--- |
+| `lockKualifikasi()` | Admin | Mengunci parameter acuan ambang batas kualifikasi tender di awal lelang. |
+| `submitProposal()` | Vendor | Mengirimkan data penawaran harga dan berkas hash dokumen vendor ke blockchain. |
+| `closeBidding()` | Admin | Menutup gerbang masa penawaran tender secara mutlak. |
+| `announceWinner()` | Admin | Memicu kontrak untuk mengalkulasi skor relatif dan menetapkan pemenang otomatis. |
+| `getProposals()` | Semua | Membaca seluruh list proposal yang masuk untuk kebutuhan transparansi publik. |
 
 ---
 
